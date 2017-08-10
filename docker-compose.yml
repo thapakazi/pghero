@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  postgresql-pghero:
+    image: 'postgres:9.6.2-alpine'
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+    - './data/pghero/postgresql:/var/lib/postgresql'
+
+  pghero:
+    image: ankane/pghero
+    depends_on:
+      - postgresql-pghero
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    ports:
+      - 8080:8080
